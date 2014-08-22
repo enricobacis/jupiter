@@ -13,8 +13,8 @@ public class TestCases {
 	
 	public final static String twoway =
 			"SELECT DISTINCT S.id" +
-			" FROM root.student AS S" +
-			" JOIN root.exam AS E ON S.id = E.sid" +
+			" FROM main.student AS S" +
+			" JOIN main.exam AS E ON S.id = E.sid" +
 			" WHERE S.id  BETWEEN 0 AND 100" +
 			" GROUP BY S.id" +
 			" HAVING MIN(E.grade) > 25";

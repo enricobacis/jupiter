@@ -11,7 +11,7 @@ import net.hydromatic.optiq.tools.RuleSet;
 import net.hydromatic.optiq.tools.RuleSets;
 
 import org.eigenbase.rel.RelNode;
-import org.eigenbase.rel.RelWriterImpl;
+import org.eigenbase.rel.RelWriter;
 import org.eigenbase.rel.rules.MergeProjectRule;
 import org.eigenbase.rel.rules.PushFilterPastJoinRule;
 import org.eigenbase.rel.rules.PushFilterPastProjectRule;
@@ -24,6 +24,7 @@ import org.eigenbase.rel.rules.TableAccessRule;
 import org.eigenbase.relopt.RelTraitSet;
 import org.eigenbase.sql.SqlNode;
 import org.eigenbase.sql.fun.SqlStdOperatorTable;
+
 
 public abstract class Planners {
 
@@ -57,10 +58,10 @@ public abstract class Planners {
 			PushJoinThroughJoinRule.LEFT,
 			PushSortPastProjectRule.INSTANCE);
 	
-	private static final RelWriterImpl relWriter = new RelWriterImpl(new PrintWriter(System.out));
+	private static final RelWriter relWriter = new CompleteRelWriter(new PrintWriter(System.out));
 
 	public static Planner getPlanner(String db, RuleSet rules) throws ClassNotFoundException {
-		return Frameworks.getPlanner(Lex.JAVA, Schemas.fromSqlite(db, "root"), SqlStdOperatorTable.instance(), rules);
+		return Frameworks.getPlanner(Lex.JAVA, Schemas.fromSqlite(db, "main"), SqlStdOperatorTable.instance(), rules);
 	}
 
 	public static Planner getPlanner(String db) throws ClassNotFoundException {
