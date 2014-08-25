@@ -17,14 +17,21 @@
 */
 package org.eigenbase.rel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.eigenbase.rel.metadata.RelMetadataQuery;
 import org.eigenbase.relopt.RelOptCost;
 import org.eigenbase.sql.SqlExplainLevel;
-import org.eigenbase.util.*;
+import org.eigenbase.util.JsonBuilder;
+import org.eigenbase.util.Pair;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Callback for a relational expression to dump itself as JSON.
@@ -34,7 +41,7 @@ import com.google.common.collect.ImmutableList;
 public class CompleteJsonWriter implements RelWriter {
   //~ Instance fields ----------------------------------------------------------
 
-  private final JsonBuilder jsonBuilder;
+  private final Gson gson;
   private final RelJson relJson;
   private final Map<RelNode, String> relIdMap =
       new IdentityHashMap<RelNode, String>();
@@ -46,15 +53,15 @@ public class CompleteJsonWriter implements RelWriter {
   //~ Constructors -------------------------------------------------------------
 
   public CompleteJsonWriter() {
-    jsonBuilder = new JsonBuilder();
-    relList = jsonBuilder.list();
-    relJson = new RelJson(jsonBuilder);
+    gson = new GsonBuilder().setPrettyPrinting().create();
+    relList = new ArrayList<Object>();
+    relJson = new RelJson(new JsonBuilder());
   }
 
   //~ Methods ------------------------------------------------------------------
 
   protected void explain_(RelNode rel, List<Pair<String, Object>> values) {
-    final Map<String, Object> map = jsonBuilder.map();
+    final Map<String, Object> map = new LinkedHashMap<String, Object>();
 
     map.put("id", null); // ensure that id is the first attribute
     map.put("relOp", relJson.classToTypeName(rel.getClass()));
@@ -85,7 +92,7 @@ public class CompleteJsonWriter implements RelWriter {
   private boolean fullPut(Map<String, Object> map, String name, Object value) {
     if (value instanceof RelOptCost) {
       RelOptCost cost = (RelOptCost) value;
-      final Map<String, Object> costMap = jsonBuilder.map();
+      final Map<String, Object> costMap = new LinkedHashMap<String, Object>();
       costMap.put("cpu", cost.getCpu());
       costMap.put("rows", cost.getRows());
       costMap.put("io", cost.getIo());
@@ -101,7 +108,7 @@ public class CompleteJsonWriter implements RelWriter {
   }
 
   private List<Object> explainInputs(List<RelNode> inputs) {
-    final List<Object> list = jsonBuilder.list();
+    final List<Object> list = new ArrayList<Object>();
     for (RelNode input : inputs) {
       String id = relIdMap.get(input);
       if (id == null) {
@@ -154,9 +161,9 @@ public class CompleteJsonWriter implements RelWriter {
    * explained.
    */
   public String asString() {
-    final Map<String, Object> map = jsonBuilder.map();
+    final Map<String, Object> map = new LinkedHashMap<String, Object>();
     map.put("rels", relList);
-    return jsonBuilder.toJsonString(map);
+    return gson.toJson(map);
   }
 }
 
