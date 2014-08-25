@@ -16,11 +16,11 @@ public class CLI {
 		ArgumentParser parser = ArgumentParsers.newArgumentParser("Planner")
 			.defaultHelp(true)
 			.description("Use Optiq to get a relational plan from SQL statement.");
-		parser.addArgument("-no", "--no-optimization")
+		parser.addArgument("-n", "--no-optimization")
 			.dest("no-opt")
 			.action(Arguments.storeTrue())
 			.help("Convert SQL to a relational plan but do not optimize");
-		parser.addArgument("-j, --json")
+		parser.addArgument("-j", "--json")
 			.dest("json")
 			.action(Arguments.storeTrue())
 			.help("Output the result as JSON");
@@ -39,14 +39,14 @@ public class CLI {
 
 		Planner planner = Planners.getPlanner("test.db",
 			ns.getBoolean("no-opt") ? RuleSets.ofList() : Planners.DEFAULT_RULES);
-		
+
 		RelNode rel = Planners.optimize(planner, ns.getString("sql"));
-		
+
 		if (ns.getBoolean("json"))
 			Writers.completeJson(rel);
 		else
 			Writers.complete(rel);
-		
+
 	}
 
 }
