@@ -64,18 +64,12 @@ public class CompleteJsonWriter implements RelWriter {
     final Map<String, Object> map = new LinkedHashMap<String, Object>();
 
     map.put("id", null); // ensure that id is the first attribute
-    map.put("relOp", relJson.classToTypeName(rel.getClass()));
-    for (Pair<String, Object> value : values) {
-      if (value.right instanceof RelNode) {
-        continue;
-      }
-      put(map, value.left, value.right);
-    }
-    // omit 'inputs: ["3"]' if "3" is the preceding rel
-    final List<Object> list = explainInputs(rel.getInputs());
-    if (list.size() != 1 || !list.get(0).equals(previousId)) {
-      map.put("inputs", list);
-    }
+    map.put("relOp", rel.getRelTypeName());
+    for (Pair<String, Object> value : values)
+      if (!(value.right instanceof RelNode))
+        put(map, value.left, value.right);
+    
+    map.put("inputs", explainInputs(rel.getInputs()));
     
     map.put("rowCount", RelMetadataQuery.getRowCount(rel));
     put(map, "cost", RelMetadataQuery.getNonCumulativeCost(rel));
@@ -161,7 +155,10 @@ public class CompleteJsonWriter implements RelWriter {
    * explained.
    */
   public String asString() {
-    return gson.toJson(relList);
+    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    map.put("root", previousId);
+    map.put("rels", relList);
+    return gson.toJson(map);
   }
 }
 

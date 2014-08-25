@@ -24,10 +24,10 @@ public class CLI {
 			.dest("json")
 			.action(Arguments.storeTrue())
 			.help("Output the result as JSON");
-		parser.addArgument("db")
+		parser.addArgument("DB")
 			.help("SQLite database to use as schema source");
-		parser.addArgument("sql")
-			.help("SQL query");
+		parser.addArgument("SQL")
+			.help("SQL query (remember to quote it to make a single string)");
 
 		Namespace ns = null;
 		try {
@@ -37,10 +37,10 @@ public class CLI {
 			System.exit(1);
 		}
 
-		Planner planner = Planners.getPlanner("test.db",
+		Planner planner = Planners.getPlanner(ns.getString("DB"),
 			ns.getBoolean("no-opt") ? RuleSets.ofList() : Planners.DEFAULT_RULES);
 
-		RelNode rel = Planners.optimize(planner, ns.getString("sql"));
+		RelNode rel = Planners.optimize(planner, ns.getString("SQL"));
 
 		if (ns.getBoolean("json"))
 			Writers.completeJson(rel);
