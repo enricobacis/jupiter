@@ -1,4 +1,4 @@
-package it.unibg.cs;
+package testcases;
 
 
 public class TestCases {

@@ -1,4 +1,4 @@
-package it.unibg.cs;
+package org.eigenbase.rel;
 
 /*
 // Licensed to Julian Hyde under one or more contributor license
