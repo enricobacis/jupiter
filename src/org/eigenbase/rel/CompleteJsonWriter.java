@@ -89,7 +89,7 @@ public class CompleteJsonWriter implements RelWriter {
     previousId = id;
   }
   
-  private boolean fullPut(Map<String, Object> map, String name, Object value) {
+  private boolean completePut(Map<String, Object> map, String name, Object value) {
     if (value instanceof RelOptCost) {
       RelOptCost cost = (RelOptCost) value;
       final Map<String, Object> costMap = new LinkedHashMap<String, Object>();
@@ -103,7 +103,7 @@ public class CompleteJsonWriter implements RelWriter {
   }
 
   private void put(Map<String, Object> map, String name, Object value) {
-    if (!fullPut(map, name, value))
+    if (!completePut(map, name, value))
       map.put(name, relJson.toJson(value));
   }
 
@@ -161,9 +161,7 @@ public class CompleteJsonWriter implements RelWriter {
    * explained.
    */
   public String asString() {
-    final Map<String, Object> map = new LinkedHashMap<String, Object>();
-    map.put("rels", relList);
-    return gson.toJson(map);
+    return gson.toJson(relList);
   }
 }
 
