@@ -38,7 +38,7 @@ public class CLI {
 		}
 
 		Planner planner = Planners.getPlanner("test.db",
-			ns.getBoolean("no-opt") ? Planners.DEFAULT_RULES : RuleSets.ofList());
+			ns.getBoolean("no-opt") ? RuleSets.ofList() : Planners.DEFAULT_RULES);
 		
 		RelNode rel = Planners.optimize(planner, ns.getString("sql"));
 		
