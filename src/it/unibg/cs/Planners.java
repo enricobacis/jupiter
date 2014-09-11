@@ -2,7 +2,6 @@ package it.unibg.cs;
 
 import net.hydromatic.optiq.config.Lex;
 import net.hydromatic.optiq.rules.java.EnumerableConvention;
-import net.hydromatic.optiq.rules.java.JavaRules;
 import net.hydromatic.optiq.tools.Frameworks;
 import net.hydromatic.optiq.tools.Planner;
 import net.hydromatic.optiq.tools.RuleSet;
@@ -28,23 +27,6 @@ public abstract class Planners {
 
 	public static final RuleSet DEFAULT_RULES =
 		RuleSets.ofList(
-			JavaRules.ENUMERABLE_JOIN_RULE,
-			JavaRules.ENUMERABLE_PROJECT_RULE,
-			JavaRules.ENUMERABLE_FILTER_RULE,
-			JavaRules.ENUMERABLE_AGGREGATE_RULE,
-			JavaRules.ENUMERABLE_SORT_RULE,
-			JavaRules.ENUMERABLE_LIMIT_RULE,
-			JavaRules.ENUMERABLE_COLLECT_RULE,
-			JavaRules.ENUMERABLE_UNCOLLECT_RULE,
-			JavaRules.ENUMERABLE_UNION_RULE,
-			JavaRules.ENUMERABLE_INTERSECT_RULE,
-			JavaRules.ENUMERABLE_MINUS_RULE,
-			JavaRules.ENUMERABLE_TABLE_MODIFICATION_RULE,
-			JavaRules.ENUMERABLE_VALUES_RULE,
-			JavaRules.ENUMERABLE_WINDOW_RULE,
-			JavaRules.ENUMERABLE_ONE_ROW_RULE,
-			JavaRules.ENUMERABLE_EMPTY_RULE,
-			JavaRules.ENUMERABLE_TABLE_FUNCTION_RULE,
 			TableAccessRule.INSTANCE,
 			MergeProjectRule.INSTANCE,
 			PushFilterPastProjectRule.INSTANCE,
